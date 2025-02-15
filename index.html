@@ -243,6 +243,251 @@
   </div>
 </div>
 
+<style>
+  :root {
+    --primary: #6366f1;
+    --secondary: #10b981;
+    --accent: #8b5cf6;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --glass: rgba(255, 255, 255, 0.1);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(45deg, var(--dark), #1e293b);
+    color: var(--light);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .converter-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .converter-header {
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+  }
+
+  .converter-header h1 {
+    font-size: 2.5rem;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .converter-body {
+    padding: 2rem;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 300px;
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--primary);
+    border-radius: 15px;
+    padding: 3rem;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    background: rgba(99, 102, 241, 0.05);
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .drop-zone:hover {
+    border-color: var(--secondary);
+    transform: translateY(-5px);
+  }
+
+  .upload-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+  }
+
+  .file-preview-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .preview-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+
+  .preview-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .preview-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+  }
+
+  .settings-panel {
+    background: rgba(255,255,255,0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .setting-group {
+    margin-bottom: 2rem;
+  }
+
+  .neon-slider {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  .neon-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--secondary);
+  }
+
+  .format-buttons {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .format-btn {
+    padding: 0.8rem;
+    border: none;
+    background: rgba(255,255,255,0.05);
+    color: var(--light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .format-btn.active {
+    background: var(--primary);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+  }
+
+  .convert-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .convert-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.3);
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--secondary);
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    .converter-body {
+      grid-template-columns: 1fr;
+    }
+    
+    .drop-zone {
+      min-height: 300px;
+    }
+  }
+</style>
+
+<div class="converter-container">
+  <div class="converter-header">
+    <h1>Pixel Alchemy Pro</h1>
+  </div>
+  
+  <div class="progress-bar"></div>
+
+  <div class="converter-body">
+    <div class="drop-zone" id="dropZone">
+      <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <h2>Drag & Drop Images</h2>
+      <p>or click to upload</p>
+    </div>
+
+    <div class="settings-panel">
+      <div class="setting-group">
+        <h3>Output Format</h3>
+        <div class="format-buttons">
+          <button class="format-btn active" data-format="png">PNG</button>
+          <button class="format-btn" data-format="jpg">JPG</button>
+          <button class="format-btn" data-format="webp">WEBP</button>
+          <button class="format-btn" data-format="svg">SVG</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h3>Quality Control</h3>
+        <input type="range" class="neon-slider" id="qualitySlider" min="0" max="100" value="90">
+        <div class="value-display" id="qualityValue">90%</div>
+      </div>
+
+      <div class="setting-group">
+        <h3>Image Scaling</h3>
+        <input type="range" class="neon-slider" id="scaleSlider" min="10" max="200" value="100">
+        <div class="value-display" id="scaleValue">100%</div>
+      </div>
+
+      <button class="convert-btn" id="convertBtn">
+        <span class="btn-text">Alchemize Images</span>
+        <div class="loading-dots" style="display:none">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
   // Advanced Image Processor with Batch Support
   class ImageAlchemist {
