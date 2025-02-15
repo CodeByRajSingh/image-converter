@@ -1,157 +1,386 @@
 <style>
-  /* Your existing CSS remains unchanged */
   :root {
-    --primary-color: #6366f1;
-    --secondary-color: #10b981;
-    --background: #ffffff;
-    --text-color: #1e293b;
-    --dark-bg: #0f172a;
-    --dark-text: #f8fafc;
-    --error-color: #ef4444;
+    --primary: #6366f1;
+    --secondary: #10b981;
+    --accent: #8b5cf6;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --glass: rgba(255, 255, 255, 0.1);
   }
 
-  /* All previous CSS rules remain same */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(45deg, var(--dark), #1e293b);
+    color: var(--light);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .converter-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .converter-header {
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+  }
+
+  .converter-header h1 {
+    font-size: 2.5rem;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .converter-body {
+    padding: 2rem;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 300px;
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--primary);
+    border-radius: 15px;
+    padding: 3rem;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    background: rgba(99, 102, 241, 0.05);
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .drop-zone:hover {
+    border-color: var(--secondary);
+    transform: translateY(-5px);
+  }
+
+  .upload-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+  }
+
+  .file-preview-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .preview-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+
+  .preview-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .preview-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+  }
+
+  .settings-panel {
+    background: rgba(255,255,255,0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .setting-group {
+    margin-bottom: 2rem;
+  }
+
+  .neon-slider {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  .neon-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--secondary);
+  }
+
+  .format-buttons {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .format-btn {
+    padding: 0.8rem;
+    border: none;
+    background: rgba(255,255,255,0.05);
+    color: var(--light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .format-btn.active {
+    background: var(--primary);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+  }
+
+  .convert-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .convert-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.3);
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--secondary);
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    .converter-body {
+      grid-template-columns: 1fr;
+    }
+    
+    .drop-zone {
+      min-height: 300px;
+    }
+  }
 </style>
 
 <div class="converter-container">
-  <!-- Your existing HTML structure remains unchanged -->
+  <div class="converter-header">
+    <h1>Pixel Alchemy Pro</h1>
+  </div>
+  
+  <div class="progress-bar"></div>
+
+  <div class="converter-body">
+    <div class="drop-zone" id="dropZone">
+      <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <h2>Drag & Drop Images</h2>
+      <p>or click to upload</p>
+    </div>
+
+    <div class="settings-panel">
+      <div class="setting-group">
+        <h3>Output Format</h3>
+        <div class="format-buttons">
+          <button class="format-btn active" data-format="png">PNG</button>
+          <button class="format-btn" data-format="jpg">JPG</button>
+          <button class="format-btn" data-format="webp">WEBP</button>
+          <button class="format-btn" data-format="svg">SVG</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h3>Quality Control</h3>
+        <input type="range" class="neon-slider" id="qualitySlider" min="0" max="100" value="90">
+        <div class="value-display" id="qualityValue">90%</div>
+      </div>
+
+      <div class="setting-group">
+        <h3>Image Scaling</h3>
+        <input type="range" class="neon-slider" id="scaleSlider" min="10" max="200" value="100">
+        <div class="value-display" id="scaleValue">100%</div>
+      </div>
+
+      <button class="convert-btn" id="convertBtn">
+        <span class="btn-text">Alchemize Images</span>
+        <div class="loading-dots" style="display:none">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
-  // Fixed JavaScript with working drag & drop
-  const elements = {
-    dropZone: document.getElementById('dropZone'),
-    fileInput: document.getElementById('fileInput'),
-    fileList: document.getElementById('fileList'),
-    formatOptions: document.getElementById('formatOptions'),
-    qualityRange: document.getElementById('qualityRange'),
-    sizeRange: document.getElementById('sizeRange'),
-    qualityValue: document.getElementById('qualityValue'),
-    sizeValue: document.getElementById('sizeValue'),
-    convertBtn: document.getElementById('convertBtn'),
-    loadingSpinner: document.getElementById('loadingSpinner'),
-    errorMessage: document.getElementById('errorMessage'),
-    themeToggle: document.getElementById('themeToggle')
-  };
-
-  let state = {
-    files: [],
-    currentFormat: 'png',
-    quality: 90,
-    size: 100,
-    darkMode: false
-  };
-
-  // Fixed drag & drop handlers
-  elements.dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    elements.dropZone.classList.add('highlight');
-  });
-
-  elements.dropZone.addEventListener('dragleave', (e) => {
-    e.preventDefault();
-    elements.dropZone.classList.remove('highlight');
-  });
-
-  elements.dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    elements.dropZone.classList.remove('highlight');
-    handleFiles(e.dataTransfer.files);
-  });
-
-  elements.fileInput.addEventListener('change', (e) => {
-    handleFiles(e.target.files);
-  });
-
-  // Rest of the JavaScript remains same
-  function handleFiles(files) {
-    if (files.length === 0) return;
-    
-    state.files = [...state.files, ...files];
-    updateFileList();
-  }
-
-  function updateFileList() {
-    elements.fileList.innerHTML = state.files
-      .map((file, index) => `
-        <div class="file-item">
-          <img src="${URL.createObjectURL(file)}" class="file-thumbnail">
-          <div>
-            <div>${file.name}</div>
-            <div>${(file.size / 1024).toFixed(2)} KB</div>
-          </div>
-        </div>
-      `).join('');
-  }
-
-  // Remaining functions remain unchanged
-  function handleFormatSelect(e) {
-    if (!e.target.classList.contains('format-option')) return;
-    
-    const selected = e.target.dataset.format;
-    state.currentFormat = selected;
-    
-    document.querySelectorAll('.format-option').forEach(option => 
-      option.classList.remove('active')
-    );
-    e.target.classList.add('active');
-  }
-
-  function updateQuality() {
-    state.quality = elements.qualityRange.value;
-    elements.qualityValue.textContent = state.quality;
-  }
-
-  function updateSize() {
-    state.size = elements.sizeRange.value;
-    elements.sizeValue.textContent = state.size;
-  }
-
-  async function convertImages() {
-    if (state.files.length === 0) {
-      showError('Please select at least one image!');
-      return;
+  // Advanced Image Processor with Batch Support
+  class ImageAlchemist {
+    constructor() {
+      this.files = [];
+      this.settings = {
+        format: 'png',
+        quality: 90,
+        scale: 100
+      };
+      
+      this.initEventListeners();
     }
 
-    elements.loadingSpinner.style.display = 'block';
-    elements.errorMessage.style.display = 'none';
+    initEventListeners() {
+      const dropZone = document.getElementById('dropZone');
+      const convertBtn = document.getElementById('convertBtn');
+      
+      // Drag & Drop Handlers
+      dropZone.addEventListener('dragover', this.handleDragOver.bind(this));
+      dropZone.addEventListener('drop', this.handleDrop.bind(this));
+      dropZone.addEventListener('click', () => fileInput.click());
+      
+      // File Input
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.multiple = true;
+      fileInput.accept = 'image/*';
+      fileInput.addEventListener('change', this.handleFiles.bind(this));
 
-    try {
-      for (const file of state.files) {
-        const converter = new ConvertJS(file);
-        const options = {
-          quality: state.quality / 100,
-          width: file.width * (state.size / 100),
-          height: file.height * (state.size / 100)
-        };
+      // Settings Controls
+      document.querySelectorAll('.format-btn').forEach(btn => {
+        btn.addEventListener('click', this.setFormat.bind(this));
+      });
 
-        const converted = await converter[state.currentFormat](options);
-        downloadFile(converted, `${file.name.split('.')[0]}.${state.currentFormat}`);
+      document.getElementById('qualitySlider').addEventListener('input', (e) => {
+        this.settings.quality = e.target.value;
+        document.getElementById('qualityValue').textContent = `${e.target.value}%`;
+      });
+
+      document.getElementById('scaleSlider').addEventListener('input', (e) => {
+        this.settings.scale = e.target.value;
+        document.getElementById('scaleValue').textContent = `${e.target.value}%`;
+      });
+
+      // Convert Button
+      convertBtn.addEventListener('click', this.processImages.bind(this));
+    }
+
+    handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.style.borderColor = '#10b981';
+    }
+
+    handleDrop(e) {
+      e.preventDefault();
+      e.currentTarget.style.borderColor = '#6366f1';
+      this.handleFiles(e.dataTransfer.files);
+    }
+
+    handleFiles(files) {
+      this.files = [...this.files, ...Array.from(files)];
+      this.updatePreview();
+    }
+
+    async processImages() {
+      if (this.files.length === 0) return;
+      
+      const convertBtn = document.getElementById('convertBtn');
+      convertBtn.disabled = true;
+      convertBtn.querySelector('.btn-text').style.display = 'none';
+      convertBtn.querySelector('.loading-dots').style.display = 'flex';
+
+      for (const [index, file] of this.files.entries()) {
+        await this.convertFile(file);
+        this.updateProgress((index + 1) / this.files.length * 100);
       }
-    } catch (error) {
-      showError(`Conversion failed: ${error.message}`);
-    } finally {
-      elements.loadingSpinner.style.display = 'none';
+
+      convertBtn.disabled = false;
+      convertBtn.querySelector('.btn-text').style.display = 'block';
+      convertBtn.querySelector('.loading-dots').style.display = 'none';
+    }
+
+    async convertFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const img = new Image();
+          img.src = e.target.result;
+          
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Apply scaling
+            canvas.width = img.width * (this.settings.scale / 100);
+            canvas.height = img.height * (this.settings.scale / 100);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Convert to format
+            canvas.toBlob((blob) => {
+              const url = URL.createObjectURL(blob);
+              this.triggerDownload(url, file.name);
+              resolve();
+            }, `image/${this.settings.format}`, this.settings.quality / 100);
+          };
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    triggerDownload(url, filename) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${filename.split('.')[0]}_converted.${this.settings.format}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    updateProgress(percentage) {
+      document.querySelector('.progress-bar').style.width = `${percentage}%`;
+    }
+
+    setFormat(e) {
+      document.querySelectorAll('.format-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      e.currentTarget.classList.add('active');
+      this.settings.format = e.currentTarget.dataset.format;
+    }
+
+    updatePreview() {
+      // Implement advanced preview grid with thumbnail previews
     }
   }
 
-  function downloadFile(data, filename) {
-    const link = document.createElement('a');
-    link.href = data;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-
-  function showError(message) {
-    elements.errorMessage.textContent = message;
-    elements.errorMessage.style.display = 'block';
-  }
-
-  function toggleTheme() {
-    state.darkMode = !state.darkMode;
-    document.body.classList.toggle('dark-mode', state.darkMode);
-    elements.themeToggle.textContent = state.darkMode ? '🌞' : '🌒';
-  }
+  // Initialize Converter
+  new ImageAlchemist();
 </script>
