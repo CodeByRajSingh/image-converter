@@ -1,631 +1,247 @@
-<style>
-  :root {
-    --primary: #6366f1;
-    --secondary: #10b981;
-    --accent: #8b5cf6;
-    --dark: #0f172a;
-    --light: #f8fafc;
-    --glass: rgba(255, 255, 255, 0.1);
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(45deg, var(--dark), #1e293b);
-    color: var(--light);
-    min-height: 100vh;
-    padding: 2rem;
-  }
-
-  .converter-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255,255,255,0.1);
-    overflow: hidden;
-    position: relative;
-  }
-
-  .converter-header {
-    padding: 2rem;
-    text-align: center;
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-  }
-
-  .converter-header h1 {
-    font-size: 2.5rem;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .converter-body {
-    padding: 2rem;
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: 1fr 300px;
-  }
-
-  .drop-zone {
-    border: 2px dashed var(--primary);
-    border-radius: 15px;
-    padding: 3rem;
-    text-align: center;
-    transition: all 0.3s;
-    position: relative;
-    background: rgba(99, 102, 241, 0.05);
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .drop-zone:hover {
-    border-color: var(--secondary);
-    transform: translateY(-5px);
-  }
-
-  .upload-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-  }
-
-  .file-preview-grid {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .preview-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s;
-  }
-
-  .preview-card:hover {
-    transform: translateY(-5px);
-  }
-
-  .preview-image {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-  }
-
-  .settings-panel {
-    background: rgba(255,255,255,0.05);
-    padding: 1.5rem;
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .setting-group {
-    margin-bottom: 2rem;
-  }
-
-  .neon-slider {
-    width: 100%;
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    outline: none;
-    -webkit-appearance: none;
-  }
-
-  .neon-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background: var(--secondary);
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 0 10px var(--secondary);
-  }
-
-  .format-buttons {
-    display: grid;
-    gap: 0.5rem;
-  }
-
-  .format-btn {
-    padding: 0.8rem;
-    border: none;
-    background: rgba(255,255,255,0.05);
-    color: var(--light);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .format-btn.active {
-    background: var(--primary);
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-  }
-
-  .convert-btn {
-    width: 100%;
-    padding: 1rem;
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .convert-btn:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 25px rgba(99, 102, 241, 0.3);
-  }
-
-  .progress-bar {
-    height: 4px;
-    background: var(--secondary);
-    width: 0%;
-    transition: width 0.3s;
-  }
-
-  @media (max-width: 768px) {
-    .converter-body {
-      grid-template-columns: 1fr;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image Converter Tool</title>
+  <style>
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    p {
+      margin-bottom: 1.5rem;
+      color: #666;
     }
     
-    .drop-zone {
-      min-height: 300px;
+    /* Upload Section */
+    .upload-section {
+      margin-bottom: 1.5rem;
+      position: relative;
     }
-  }
-</style>
-
-<div class="converter-container">
-  <div class="converter-header">
-    <h1>Pixel Alchemy Pro</h1>
-  </div>
-  
-  <div class="progress-bar"></div>
-
-  <div class="converter-body">
-    <div class="drop-zone" id="dropZone">
-      <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="17 8 12 3 7 8"/>
-        <line x1="12" y1="3" x2="12" y2="15"/>
-      </svg>
-      <h2>Drag & Drop Images</h2>
-      <p>or click to upload</p>
-    </div>
-
-    <div class="settings-panel">
-      <div class="setting-group">
-        <h3>Output Format</h3>
-        <div class="format-buttons">
-          <button class="format-btn active" data-format="png">PNG</button>
-          <button class="format-btn" data-format="jpg">JPG</button>
-          <button class="format-btn" data-format="webp">WEBP</button>
-          <button class="format-btn" data-format="svg">SVG</button>
-        </div>
-      </div>
-
-      <div class="setting-group">
-        <h3>Quality Control</h3>
-        <input type="range" class="neon-slider" id="qualitySlider" min="0" max="100" value="90">
-        <div class="value-display" id="qualityValue">90%</div>
-      </div>
-
-      <div class="setting-group">
-        <h3>Image Scaling</h3>
-        <input type="range" class="neon-slider" id="scaleSlider" min="10" max="200" value="100">
-        <div class="value-display" id="scaleValue">100%</div>
-      </div>
-
-      <button class="convert-btn" id="convertBtn">
-        <span class="btn-text">Alchemize Images</span>
-        <div class="loading-dots" style="display:none">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-      </button>
-    </div>
-  </div>
-</div>
-
-<style>
-  :root {
-    --primary: #6366f1;
-    --secondary: #10b981;
-    --accent: #8b5cf6;
-    --dark: #0f172a;
-    --light: #f8fafc;
-    --glass: rgba(255, 255, 255, 0.1);
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(45deg, var(--dark), #1e293b);
-    color: var(--light);
-    min-height: 100vh;
-    padding: 2rem;
-  }
-
-  .converter-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255,255,255,0.1);
-    overflow: hidden;
-    position: relative;
-  }
-
-  .converter-header {
-    padding: 2rem;
-    text-align: center;
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-  }
-
-  .converter-header h1 {
-    font-size: 2.5rem;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .converter-body {
-    padding: 2rem;
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: 1fr 300px;
-  }
-
-  .drop-zone {
-    border: 2px dashed var(--primary);
-    border-radius: 15px;
-    padding: 3rem;
-    text-align: center;
-    transition: all 0.3s;
-    position: relative;
-    background: rgba(99, 102, 241, 0.05);
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .drop-zone:hover {
-    border-color: var(--secondary);
-    transform: translateY(-5px);
-  }
-
-  .upload-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-  }
-
-  .file-preview-grid {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .preview-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s;
-  }
-
-  .preview-card:hover {
-    transform: translateY(-5px);
-  }
-
-  .preview-image {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-  }
-
-  .settings-panel {
-    background: rgba(255,255,255,0.05);
-    padding: 1.5rem;
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .setting-group {
-    margin-bottom: 2rem;
-  }
-
-  .neon-slider {
-    width: 100%;
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    outline: none;
-    -webkit-appearance: none;
-  }
-
-  .neon-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background: var(--secondary);
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 0 10px var(--secondary);
-  }
-
-  .format-buttons {
-    display: grid;
-    gap: 0.5rem;
-  }
-
-  .format-btn {
-    padding: 0.8rem;
-    border: none;
-    background: rgba(255,255,255,0.05);
-    color: var(--light);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .format-btn.active {
-    background: var(--primary);
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-  }
-
-  .convert-btn {
-    width: 100%;
-    padding: 1rem;
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .convert-btn:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 25px rgba(99, 102, 241, 0.3);
-  }
-
-  .progress-bar {
-    height: 4px;
-    background: var(--secondary);
-    width: 0%;
-    transition: width 0.3s;
-  }
-
-  @media (max-width: 768px) {
-    .converter-body {
-      grid-template-columns: 1fr;
+    #imageInput {
+      display: none;
+    }
+    .drop-zone {
+      border: 2px dashed #ccc;
+      padding: 2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      color: #777;
+    }
+    .drop-zone.dragover {
+      background-color: #f0f0f0;
     }
     
-    .drop-zone {
-      min-height: 300px;
+    /* Options & Buttons */
+    .options {
+      margin-bottom: 1.5rem;
     }
-  }
-</style>
-
-<div class="converter-container">
-  <div class="converter-header">
-    <h1>Pixel Alchemy Pro</h1>
-  </div>
-  
-  <div class="progress-bar"></div>
-
-  <div class="converter-body">
-    <div class="drop-zone" id="dropZone">
-      <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="17 8 12 3 7 8"/>
-        <line x1="12" y1="3" x2="12" y2="15"/>
-      </svg>
-      <h2>Drag & Drop Images</h2>
-      <p>or click to upload</p>
-    </div>
-
-    <div class="settings-panel">
-      <div class="setting-group">
-        <h3>Output Format</h3>
-        <div class="format-buttons">
-          <button class="format-btn active" data-format="png">PNG</button>
-          <button class="format-btn" data-format="jpg">JPG</button>
-          <button class="format-btn" data-format="webp">WEBP</button>
-          <button class="format-btn" data-format="svg">SVG</button>
-        </div>
-      </div>
-
-      <div class="setting-group">
-        <h3>Quality Control</h3>
-        <input type="range" class="neon-slider" id="qualitySlider" min="0" max="100" value="90">
-        <div class="value-display" id="qualityValue">90%</div>
-      </div>
-
-      <div class="setting-group">
-        <h3>Image Scaling</h3>
-        <input type="range" class="neon-slider" id="scaleSlider" min="10" max="200" value="100">
-        <div class="value-display" id="scaleValue">100%</div>
-      </div>
-
-      <button class="convert-btn" id="convertBtn">
-        <span class="btn-text">Alchemize Images</span>
-        <div class="loading-dots" style="display:none">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-      </button>
-    </div>
-  </div>
-</div>
-
-<script>
-  // Advanced Image Processor with Batch Support
-  class ImageAlchemist {
-    constructor() {
-      this.files = [];
-      this.settings = {
-        format: 'png',
-        quality: 90,
-        scale: 100
-      };
-      
-      this.initEventListeners();
+    label {
+      margin-right: 0.5rem;
+      font-weight: bold;
+      color: #555;
     }
-
-    initEventListeners() {
-      const dropZone = document.getElementById('dropZone');
-      const convertBtn = document.getElementById('convertBtn');
-      
-      // Drag & Drop Handlers
-      dropZone.addEventListener('dragover', this.handleDragOver.bind(this));
-      dropZone.addEventListener('drop', this.handleDrop.bind(this));
-      dropZone.addEventListener('click', () => fileInput.click());
-      
-      // File Input
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.multiple = true;
-      fileInput.accept = 'image/*';
-      fileInput.addEventListener('change', this.handleFiles.bind(this));
-
-      // Settings Controls
-      document.querySelectorAll('.format-btn').forEach(btn => {
-        btn.addEventListener('click', this.setFormat.bind(this));
-      });
-
-      document.getElementById('qualitySlider').addEventListener('input', (e) => {
-        this.settings.quality = e.target.value;
-        document.getElementById('qualityValue').textContent = `${e.target.value}%`;
-      });
-
-      document.getElementById('scaleSlider').addEventListener('input', (e) => {
-        this.settings.scale = e.target.value;
-        document.getElementById('scaleValue').textContent = `${e.target.value}%`;
-      });
-
-      // Convert Button
-      convertBtn.addEventListener('click', this.processImages.bind(this));
+    select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
-
-    handleDragOver(e) {
-      e.preventDefault();
-      e.currentTarget.style.borderColor = '#10b981';
+    button {
+      background-color: #007BFF;
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 1.5rem;
     }
-
-    handleDrop(e) {
-      e.preventDefault();
-      e.currentTarget.style.borderColor = '#6366f1';
-      this.handleFiles(e.dataTransfer.files);
+    button:hover {
+      background-color: #0056b3;
     }
-
-    handleFiles(files) {
-      this.files = [...this.files, ...Array.from(files)];
-      this.updatePreview();
+    
+    /* Output Section */
+    .output {
+      margin-top: 1rem;
     }
-
-    async processImages() {
-      if (this.files.length === 0) return;
-      
-      const convertBtn = document.getElementById('convertBtn');
-      convertBtn.disabled = true;
-      convertBtn.querySelector('.btn-text').style.display = 'none';
-      convertBtn.querySelector('.loading-dots').style.display = 'flex';
-
-      for (const [index, file] of this.files.entries()) {
-        await this.convertFile(file);
-        this.updateProgress((index + 1) / this.files.length * 100);
+    .output h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    #outputImage {
+      max-width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #downloadLink {
+      display: inline-block;
+      margin-top: 1rem;
+      text-decoration: none;
+      background-color: #28a745;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    #downloadLink:hover {
+      background-color: #218838;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
       }
-
-      convertBtn.disabled = false;
-      convertBtn.querySelector('.btn-text').style.display = 'block';
-      convertBtn.querySelector('.loading-dots').style.display = 'none';
+      button {
+        width: 100%;
+      }
     }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image Converter Tool</h1>
+    <p>Convert your images to different formats easily!</p>
+    
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <input type="file" id="imageInput" accept="image/*" />
+      <div class="drop-zone" id="dropZone">
+        Click or Drag &amp; Drop your image here
+      </div>
+    </div>
+    
+    <!-- Conversion Options -->
+    <div class="options">
+      <label for="formatSelect">Convert to:</label>
+      <select id="formatSelect">
+        <option value="image/png">PNG</option>
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/webp">WEBP</option>
+      </select>
+    </div>
+    
+    <!-- Convert Button -->
+    <button id="convertBtn">Convert Image</button>
+    
+    <!-- Output Section -->
+    <div class="output">
+      <h2>Converted Image</h2>
+      <canvas id="canvas" style="display: none;"></canvas>
+      <img id="outputImage" src="" alt="Converted Image" style="display: none;" />
+      <br />
+      <a id="downloadLink" href="" download="converted-image" style="display: none;">Download Converted Image</a>
+    </div>
+  </div>
 
-    async convertFile(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          const img = new Image();
-          img.src = e.target.result;
+  <script>
+    // Get Elements
+    const imageInput = document.getElementById('imageInput');
+    const dropZone = document.getElementById('dropZone');
+    const convertBtn = document.getElementById('convertBtn');
+    const formatSelect = document.getElementById('formatSelect');
+    const canvas = document.getElementById('canvas');
+    const outputImage = document.getElementById('outputImage');
+    const downloadLink = document.getElementById('downloadLink');
+
+    let selectedFile = null;
+
+    // Open file selector when clicking the drop zone
+    dropZone.addEventListener('click', () => {
+      imageInput.click();
+    });
+
+    // Update when a file is selected via the file input
+    imageInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        selectedFile = e.target.files[0];
+        dropZone.textContent = selectedFile.name;
+      }
+    });
+
+    // Drag & Drop Events
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        selectedFile = e.dataTransfer.files[0];
+        // Sync with file input
+        imageInput.files = e.dataTransfer.files;
+        dropZone.textContent = selectedFile.name;
+      }
+    });
+
+    // Convert Image when button is clicked
+    convertBtn.addEventListener('click', () => {
+      if (!selectedFile) {
+        alert('Please select an image file.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = new Image();
+        img.onload = function () {
+          // Resize canvas to match image dimensions
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
           
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Apply scaling
-            canvas.width = img.width * (this.settings.scale / 100);
-            canvas.height = img.height * (this.settings.scale / 100);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-            // Convert to format
-            canvas.toBlob((blob) => {
-              const url = URL.createObjectURL(blob);
-              this.triggerDownload(url, file.name);
-              resolve();
-            }, `image/${this.settings.format}`, this.settings.quality / 100);
-          };
+          // Determine the selected format and quality
+          const format = formatSelect.value;
+          const quality = (format === 'image/jpeg' || format === 'image/webp') ? 0.92 : undefined;
+          const dataURL = canvas.toDataURL(format, quality);
+          
+          // Display the converted image
+          outputImage.src = dataURL;
+          outputImage.style.display = 'block';
+          
+          // Prepare the download link
+          downloadLink.href = dataURL;
+          downloadLink.style.display = 'inline-block';
         };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    triggerDownload(url, filename) {
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${filename.split('.')[0]}_converted.${this.settings.format}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    updateProgress(percentage) {
-      document.querySelector('.progress-bar').style.width = `${percentage}%`;
-    }
-
-    setFormat(e) {
-      document.querySelectorAll('.format-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      e.currentTarget.classList.add('active');
-      this.settings.format = e.currentTarget.dataset.format;
-    }
-
-    updatePreview() {
-      // Implement advanced preview grid with thumbnail previews
-    }
-  }
-
-  // Initialize Converter
-  new ImageAlchemist();
-</script>
+        img.onerror = function () {
+          alert('Failed to load the image. Please try another file.');
+        };
+        img.src = event.target.result;
+      };
+      reader.onerror = function () {
+        alert('Error reading the file. Please try again.');
+      };
+      reader.readAsDataURL(selectedFile);
+    });
+  </script>
+</body>
+</html>
